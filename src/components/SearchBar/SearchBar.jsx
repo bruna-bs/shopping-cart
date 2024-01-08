@@ -1,28 +1,31 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { BsSearch } from "react-icons/bs";
-import fetchProducts from "../../api/fetchProducts";
+
 import AppContext from "../../context/AppContext";
 
 import "./SearchBar.css";
+import { fetchOneOrMoreProducts, fetchProducts } from "../../api/fetchProducts";
 
 function SearchBar() {
 
-    const { setProducts } = useContext(AppContext)
+    const { setProducts, setLoading } = useContext(AppContext)
     const [searchValue, setSearchValue] = useState("");
 
-    useEffect(() => {
-        console.log("searchValue", searchValue)
-    },[searchValue])
+    // useEffect(() => {
+    //     console.log("searchValue", searchValue)
+    // },[searchValue])
 
 
     const handleSearch = async (event) => {
         event.preventDefault();
+        setLoading(true);
 
-        const products = await fetchProducts(searchValue);
+        const products = await fetchOneOrMoreProducts(searchValue);
+        
         setProducts(products);
+        setLoading(false);
         setSearchValue("");
     }
-
 
     return (
         <form className="search-bar" onSubmit={handleSearch}>
